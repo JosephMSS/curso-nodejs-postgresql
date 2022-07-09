@@ -13,7 +13,7 @@ const sequelize = new Sequelize(URI, {
 });
 
 setupModels(sequelize)
-sequelize.sync()
+// sequelize.sync()
 const validateConnection = async () => {
   try {
     await sequelize.authenticate();
