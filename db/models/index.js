@@ -11,6 +11,7 @@ function setupModels(sequelize) {
    * Luego de ejecutar los inits vamos a generar las asociaciones
 
    */
+  User.associate(sequelize.models)
   Customer.associate(sequelize.models)
 }
 module.exports = { setupModels, };

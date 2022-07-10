@@ -31,7 +31,8 @@ class User extends Model {
   /**
    * En este metodo definimos todas las relaciones que va a tener este modelo
    */
-  static associate() {
+  static associate(models) {
+    this.hasOne(models.Customer, { as: "customer", foreignKey: "userId" })
     //models
   }
   /**
