@@ -1,29 +1,33 @@
-const { Model, DataTypes, Sequelize } = require("sequelize")
-const USER_TABLE = 'users'
+const { Model, DataTypes, Sequelize } = require('sequelize');
+const USER_TABLE = 'users';
 const UserSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
   },
   email: {
     allowNull: false,
     type: DataTypes.STRING,
-    unique: true
+    unique: true,
+  },
+  password: {
+    allowNull: false,
+    type: DataTypes.STRING,
   },
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: 'customer'
+    defaultValue: 'customer',
   },
   createdAt: {
     allowNull: false,
-    field: "created_at",
     type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
-  }
-}
+    field: 'create_at',
+    defaultValue: Sequelize.NOW,
+  },
+};
 /**
  * Los metodos estaticos no necesitan una declaracion del objeto para utilizarlos
  */
@@ -32,7 +36,7 @@ class User extends Model {
    * En este metodo definimos todas las relaciones que va a tener este modelo
    */
   static associate(models) {
-    this.hasOne(models.Customer, { as: "customer", foreignKey: "userId" })
+    this.hasOne(models.Customer, { as: 'customer', foreignKey: 'userId' });
     //models
   }
   /**
@@ -45,8 +49,8 @@ class User extends Model {
       sequelize,
       tableName: USER_TABLE,
       modelName: 'User',
-      timestamps: false
-    }
+      timestamps: false,
+    };
   }
 }
 module.exports = { USER_TABLE, UserSchema, User };

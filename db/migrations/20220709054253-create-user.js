@@ -14,19 +14,23 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       email: {
         allowNull: false,
         type: DataTypes.STRING,
-        unique: true
+        unique: true,
+      },
+      password: {
+        allowNull: false,
+        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,
-        field: "created_at",
         type: DataTypes.DATE,
-        defaultValue: Sequelize.NOW
-      }
+        field: 'create_at',
+        defaultValue: Sequelize.NOW,
+      },
     });
   },
 
