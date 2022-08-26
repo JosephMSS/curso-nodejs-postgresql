@@ -21,13 +21,9 @@ class ProductsService {
   }
 
   async findOne(id) {
-    const product = this.products.find((item) => item.id === id);
-    if (!product) {
-      throw boom.notFound('product not found');
-    }
-    if (product.isBlock) {
-      throw boom.conflict('product is block');
-    }
+    const product = models.Product.findByPk(id, {
+      include: 'category',
+    });
     return product;
   }
 

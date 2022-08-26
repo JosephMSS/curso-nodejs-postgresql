@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { id: categoryId } = require('./category.schema');
-const id = Joi.string().uuid();
+const id = Joi.string();
 const name = Joi.string().min(3).max(50);
 const price = Joi.number().integer().min(10);
 const image = Joi.string().uri();

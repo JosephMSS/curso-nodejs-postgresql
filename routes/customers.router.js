@@ -18,8 +18,22 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
+router.get(
+  '/:id',
+  validationHandler(getCustomerSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const customer = await service.findOne(id);
+      res.json(customer);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
-router.post('/',
+router.post(
+  '/',
   validationHandler(createCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -31,7 +45,8 @@ router.post('/',
   }
 );
 
-router.patch('/:id',
+router.patch(
+  '/:id',
   validationHandler(getCustomerSchema, 'params'),
   validationHandler(updateCustomerSchema, 'body'),
   async (req, res, next) => {
@@ -45,7 +60,8 @@ router.patch('/:id',
   }
 );
 
-router.delete('/:id',
+router.delete(
+  '/:id',
   validationHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {
