@@ -25,6 +25,17 @@ const OrderSchema = {
 class Order extends Model {
   static associate(models) {
     this.belongsTo(models.Customer, { as: 'customer' });
+    /**
+     * las relaciones intermedias manejan con este método,
+     * con el modelo a traves del cual se va a establecer
+     * la relación, y las llaves foráneas.
+     */
+    this.belongsToMany(models.Customer, {
+      as: 'items',
+      through: models.OrderProduct,
+      foreignKey: 'orderId',
+      otherKey: 'productId',
+    });
   }
   static config(sequelize) {
     return {
