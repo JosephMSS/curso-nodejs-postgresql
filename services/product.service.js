@@ -13,10 +13,14 @@ class ProductsService {
     return newProduct;
   }
 
-  async find() {
-    const data = await models.Product.findAll({
-      include: 'category',
-    });
+  async find({ query }) {
+    const config = { include: 'category' };
+    const { limit, offset } = query;
+    if (limit && offset) {
+      config.limit = Number(limit);
+      config.offset = Number(offset);
+    }
+    const data = await models.Product.findAll(config);
     return data;
   }
 
