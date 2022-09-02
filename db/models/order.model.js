@@ -30,7 +30,7 @@ class Order extends Model {
      * con el modelo a traves del cual se va a establecer
      * la relación, y las llaves foráneas.
      */
-    this.belongsToMany(models.Customer, {
+    this.belongsToMany(models.Product, {
       as: 'items',
       through: models.OrderProduct,
       foreignKey: 'orderId',
