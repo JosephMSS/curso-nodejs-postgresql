@@ -13,7 +13,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-
+/**
+ * Lista de prueba de whitelist
+ */
 const whitelist = ['http://localhost:8080', 'https://myapp.co'];
 const options = {
   origin: (origin, callback) => {

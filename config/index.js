@@ -1,4 +1,7 @@
 require('dotenv').config();
+/**
+ * Descripción de configuración
+ */
 const config = {
   env: process.env.NODE_ENV || 'dev',
   port: process.env.PORT || 3000,
