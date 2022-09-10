@@ -8,6 +8,7 @@ const {
   boomErrorHandler,
   ormHandler,
 } = require('./middlewares/error.handler');
+const { registerStrategies } = require('./utils/auth');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,7 +28,7 @@ const options = {
   },
 };
 app.use(cors(options));
-
+registerStrategies();
 app.get('/', (req, res) => {
   res.send('Hola mi server en express');
 });

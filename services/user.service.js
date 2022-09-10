@@ -56,8 +56,12 @@ class UserService {
     return userWithoutPassword;
   }
 
-  async find() {
-    const res = await models.User.findAll({ include: ['customer'] });
+  async findByEmail(email) {
+    const res = await models.User.findOne({
+      where: {
+        email,
+      },
+    });
     return res;
   }
 
