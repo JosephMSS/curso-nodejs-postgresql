@@ -1,3 +1,8 @@
+/**
+ * ## Lecturas Complementarias
+ * @link https://auth0.com/docs/login/configure-silent-authentication
+ * @link https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/
+ */
 const jwt = require('jsonwebtoken');
 /**
  * El secret debe estar en una variable de entorno **Nunca en el código**
