@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const CategoryService = require('./../services/category.service');
 const validatorHandler = require('./../middlewares/validator.handler');
@@ -7,10 +8,24 @@ const {
   updateCategorySchema,
   getCategorySchema,
 } = require('./../schemas/category.schema');
+const { session } = require('passport');
 
 const router = express.Router();
 const service = new CategoryService();
+/**
+ * El nombre de la estrategia se define el archivo
+ * que se registro la strategy
+ */
+const STRATEGY_NAME = 'jwtStrategy';
 
+/**
+ * @typedef  strategyConfig
+ * @property {Boolean} session funciona para activar o desactivar el manejo se sesiones con passport
+ */
+/**
+ * @type {strategyConfig}
+ */
+const strategyConfig = { session: false };
 router.get('/', async (req, res, next) => {
   try {
     const categories = await service.find();
@@ -36,6 +51,7 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate(STRATEGY_NAME, strategyConfig),
   validatorHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {

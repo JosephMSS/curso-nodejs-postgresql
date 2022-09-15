@@ -1,5 +1,6 @@
 const passport = require('passport');
 const { LocalStrategy } = require('./strategies/local.strategy');
+const { jwtStrategy } = require('./strategies/jwt.strategy');
 /**
  * Este método debe ser llamado en el punto de entrada de la app
  * @description Las estrategias deben ser registradas en passport,
@@ -8,5 +9,6 @@ const { LocalStrategy } = require('./strategies/local.strategy');
  */
 function registerStrategies() {
   passport.use('localStrategy', LocalStrategy);
+  passport.use('jwtStrategy', jwtStrategy);
 }
 module.exports = { registerStrategies };
