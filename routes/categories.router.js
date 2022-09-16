@@ -8,7 +8,7 @@ const {
   updateCategorySchema,
   getCategorySchema,
 } = require('./../schemas/category.schema');
-const { session } = require('passport');
+const { checkRole } = require('../middlewares/auth.handler');
 
 const router = express.Router();
 const service = new CategoryService();
@@ -26,14 +26,17 @@ const STRATEGY_NAME = 'jwtStrategy';
  * @type {strategyConfig}
  */
 const strategyConfig = { session: false };
-router.get('/', async (req, res, next) => {
-  try {
-    const categories = await service.find();
-    res.json(categories);
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  async (req, res, next) => {
+    try {
+      const categories = await service.find();
+      res.json(categories);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get(
   '/:id',
@@ -52,6 +55,7 @@ router.get(
 router.post(
   '/',
   passport.authenticate(STRATEGY_NAME, strategyConfig),
+  checkRole('admin'),
   validatorHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
@@ -66,6 +70,8 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate(STRATEGY_NAME, strategyConfig),
+  checkRole('admin','seller'),
   validatorHandler(getCategorySchema, 'params'),
   validatorHandler(updateCategorySchema, 'body'),
   async (req, res, next) => {

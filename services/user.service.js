@@ -72,6 +72,10 @@ class UserService {
     }
     return user;
   }
+  async find() {
+    const userList = await models.User.findAll();
+    return userList;
+  }
 
   async update(id, changes) {
     const user = await this.findOne(id);
