@@ -17,6 +17,32 @@ class OrderService {
     const orderList = await models.Order.findAll();
     return orderList;
   }
+  /**
+   *
+   * @param {String} userId
+   * @returns
+   */
+  async findByUser(userId) {
+    /**
+     * Podemos hacer consultas complejas a traves de
+     * las relaciones,**Importante**:
+     * debe e iniciar con el
+     * símbolo de dólar
+     */
+    const where = {
+      '$customer.user.id$': userId,
+    };
+    const orderList = await models.Order.findAll({
+      where,
+      include: [
+        {
+          association: 'customer',
+          include: ['user'],
+        },
+      ],
+    });
+    return orderList;
+  }
 
   async findOne(id) {
     const order = await models.Order.findByPk(id, {

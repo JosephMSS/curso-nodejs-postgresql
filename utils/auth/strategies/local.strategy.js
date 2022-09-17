@@ -1,8 +1,7 @@
 const { Strategy } = require('passport-local');
-const UserService = require('../../../services/user.service');
-const service = new UserService();
-const boom = require('@hapi/boom');
-const { compare } = require('bcrypt');
+const { AuthService } = require('../../../services/auth.service');
+const service = new AuthService();
+
 /**
  * @callback  done
  * @param {Error | null} error El null se usa en casos de éxito
@@ -18,24 +17,7 @@ const { compare } = require('bcrypt');
  */
 async function verify(email, password, done) {
   try {
-    const user = await service.findByEmail(email);
-    /**
-     * Si el usuario no existe entonces retorna un 401
-     */
-    if (!user) {
-      done(boom.unauthorized(), false);
-    }
-    const hash = user.password;
-    const isMatch = await compare(password, hash);
-    if (!isMatch) {
-      done(boom.unauthorized(), false);
-    }
-    /**
-     * Si es valido retorno la información del usuario en el callback
-     */
-    const { userWithoutPassword } = UserService.deleteUserPassword(
-      user.dataValues
-    );
+    const userWithoutPassword = await service.getUser(email, password);
     done(null, userWithoutPassword);
   } catch (error) {
     /**

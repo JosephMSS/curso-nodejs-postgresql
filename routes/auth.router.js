@@ -1,11 +1,8 @@
 const express = require('express');
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const {
-  config: { auth },
-} = require('../config');
 const router = express.Router();
-
+const { AuthService } = require('../services/auth.service');
+const service = new AuthService();
 const STRATEGY_NAME = 'localStrategy';
 /**
  * @typedef  strategyConfig
@@ -32,22 +29,7 @@ router.post(
        * definamos en la estrategia
        */
       const { user } = req;
-      /**
-       *
-       * La información que vamos a incluir en el jwt, **Nunca guardar información sensible**
-       * @typedef {Object} payload
-       * @property {String} sub Es el ID del usuario con el cual vamos a verificar en la BD
-       * @property {String} role El que tiene nuestro usuario
-       */
-      /**
-       * @type {payload}
-       */
-      const payload = {
-        sub: user.id,
-        role: user.role,
-      };
-      const token = jwt.sign(payload, auth.jwtSecret);
-
+      const token = service.signToken(user);
       res.status(201).json({ user, token });
     } catch (error) {
       next(error);
