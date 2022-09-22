@@ -53,7 +53,18 @@ class AuthService {
     const token = jwt.sign(payload, auth.jwtSecret);
     return token;
   }
-  async sendMail(email) {
+  /**
+   * 1. Busca el usuario por email y lo valida,
+   * 2. Crea un token con 15 minutos de expiración,
+   * 3. Guarda ese token en la base de datos
+   * 4. Crea el el contenido del email
+   * para la información el método
+   * sentEmail y retorna la
+   * respuesta
+   * @param {String} email
+   * @returns
+   */
+  async sendRecovery(email) {
     const user = await service.findByEmail(email);
     /**
      * Si el usuario no existe entonces retorna un 401
@@ -61,6 +72,34 @@ class AuthService {
     if (!user) {
       throw boom.unauthorized();
     }
+    const payload = {
+      sub: user.id,
+    };
+    /**
+     * IMPORTANT: El secret de recovery puede ser uno diferente al de
+     *  autenticación para mayor seguridad
+     */
+    const recoveryToken = jwt.sign(payload, auth.jwtSecret, {
+      expiresIn: '15min',
+    });
+    /**
+     * Usualmente el token de seguridad debe mandarse como
+     * **query param** al frontend para que este lo pueda enviar luego
+     */
+    await service.update(user.id, {
+      recoveryToken,
+    });
+    const link = `http://myfrontend.com:?token=${recoveryToken}`;
+    const infoMail = {
+      from: 'joseph.demo.node@gmail.com', // sender address
+      to: `${user.email}`, // list of receivers
+      subject: 'Email para recuperar la contraseña', // Subject line
+      html: `<b>Ingresa a este link=>${link}</b>`, // html body
+    };
+    const rta = await this.sendMail(infoMail);
+    return rta;
+  }
+  async sendMail(infoMail) {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -70,13 +109,7 @@ class AuthService {
         pass: mail.password, // generated ethereal password
       },
     });
-      await transporter.sendMail({
-      from: 'joseph.demo.node@gmail.com', // sender address
-      to: `${user.email}`, // list of receivers
-      subject: 'Hello ✔', // Subject line
-      text: 'Hello world?', // plain text body
-      html: '<b>Hello world?</b>', // html body
-    });
+    await transporter.sendMail(infoMail);
     return { message: 'Mail Sent' };
   }
 }
