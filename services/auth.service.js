@@ -7,6 +7,7 @@ const service = new UserService();
 const {
   config: { auth, mail },
 } = require('../config');
+const { config } = require('dotenv');
 /**
  * Creamos la clase auth service para unificar toda la lógica
  * de autentificación que teníamos en las estrategias
@@ -111,6 +112,26 @@ class AuthService {
     });
     await transporter.sendMail(infoMail);
     return { message: 'Mail Sent' };
+  }
+  async changePassword({ token, newPassword }) {
+    const { sub } = jwt.verify(token, auth.jwtSecret);
+    const user = await service.findOne(sub);
+    const { id, recoveryToken } = user;
+    if (recoveryToken != token) {
+      throw boom.unauthorized();
+    }
+    user.dataValues.password = newPassword;
+    const userWithPasswordHash = await UserService.userWithPasswordHash(
+      user.dataValues
+    );
+    const updateUser = await service.update(id, {
+      recoveryToken: null,
+      password: userWithPasswordHash.password,
+    });
+    const { userWithoutPassword } = await UserService.deleteUserPassword(
+      updateUser.dataValues
+    );
+    return { user: userWithoutPassword };
   }
 }
 module.exports = { AuthService };

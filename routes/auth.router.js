@@ -45,4 +45,12 @@ router.post('/recovery', async (req, res, next) => {
     next(error);
   }
 });
+router.post('/change-password', async (req, res, next) => {
+  try {
+    const rta = await service.changePassword(req.body);
+    res.status(201).json(rta);
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;
